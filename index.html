@@ -23,7 +23,6 @@
     overflow: hidden;
   }
 
-  /* Khung slide: tỉ lệ 16:9, tự co theo màn hình */
   .deck {
     position: relative;
     width: 100vw;
@@ -73,7 +72,7 @@
     margin-bottom: 1.5vh;
   }
 
-  /* Slide 2 - timeline */
+  /* Slide 2 */
   .steps { display: grid; gap: 2.2vh; }
   .step { display: flex; align-items: center; gap: 18px; }
   .num {
@@ -86,7 +85,7 @@
     display: flex; align-items: center; justify-content: center;
   }
 
-  /* Slide 3 - nền vàng đen */
+  /* Slide 3 */
   .s3 { background-image: url("vang.png"), linear-gradient(#0b1b33,#0b1b33); }
   .panel {
     background: rgba(11,27,51,.88);
@@ -95,7 +94,7 @@
     max-width: 60vw;
   }
 
-  /* Slide 4 - 2x2 cards */
+  /* Slide 4 */
   .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5vh 2.5vw; }
   .card { background: var(--card); padding: 3vh 2.5vw; border-radius: 8px; }
   .card .k {
@@ -112,7 +111,7 @@
     margin-bottom: 1vh;
   }
 
-  /* Slide 5 - 2 cột */
+  /* Slide 5 */
   .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; }
   .col { background: var(--card); padding: 4vh 2.5vw; border-radius: 8px; }
   .col h3 {
@@ -124,7 +123,7 @@
   .col li { margin-bottom: 1.2vh; padding-left: 1.2em; position: relative; }
   .col li::before { content: "•"; color: var(--gold); position: absolute; left: 0; }
 
-  /* Slide 6 - nền giấy cổ */
+  /* Slide 6 */
   .s6 { background-image: url("giay.png"), linear-gradient(#efdcab,#d9bd86); }
   .s6 .scroll-text {
     color: var(--brown);
@@ -141,6 +140,21 @@
     border-radius: 6px;
   }
   .msg b { color: var(--gold); }
+
+  /* Slide 7: bài phân tích, cuộn được */
+  .slide.s7 {
+    justify-content: flex-start;
+    overflow-y: auto;
+    padding-top: 8vh;
+    padding-bottom: 12vh;
+  }
+  .slide.s7 h2 { margin-bottom: 2.5vh; }
+  .slide.s7 p {
+    font-size: clamp(14px, 1.5vw, 17px);
+    line-height: 1.75;
+    margin-bottom: 1.6vh;
+    text-align: justify;
+  }
 
   /* Điều khiển */
   .controls {
@@ -245,6 +259,23 @@
     <h2>Cảm nhận và kết luận</h2>
     <p class="scroll-text">Qua truyện “Thần Trụ Trời”, em cảm nhận được trí tưởng tượng phong phú và sự sáng tạo của người xưa. Dù cách giải thích về nguồn gốc trời đất còn mang tính thần thoại, câu chuyện vẫn có giá trị văn hóa và giúp chúng ta hiểu thêm về đời sống tinh thần của người Việt cổ.</p>
     <p class="msg"><b>Thông điệp:</b> Trí tưởng tượng và khát vọng khám phá thế giới luôn là một phần quan trọng trong đời sống con người.</p>
+  </section>
+
+  <!-- Slide 7 -->
+  <section class="slide s7">
+    <h2>Phân tích, đánh giá truyện Thần Trụ Trời</h2>
+
+    <p>Trong kho tàng thần thoại Việt Nam, có rất nhiều câu chuyện kể về nguồn gốc của thế giới và các hiện tượng tự nhiên. Một trong những câu chuyện tiêu biểu là “Thần Trụ Trời”. Đây là truyện thần thoại giải thích quá trình hình thành trời đất bằng trí tưởng tượng phong phú của người xưa. Qua câu chuyện, chúng ta có thể thấy được cách con người thời cổ đại nhìn nhận và lý giải thế giới xung quanh.</p>
+
+    <p>Truyện kể rằng, thuở ban đầu, trời đất còn hỗn độn, chưa phân chia rõ ràng. Lúc ấy xuất hiện một vị thần có thân hình khổng lồ. Thần đứng dậy, dùng sức mạnh của mình đào đất, đá rồi đắp thành một chiếc cột lớn để chống trời. Khi trời được nâng lên cao và đất được mở rộng, thần phá bỏ chiếc cột ấy. Những khối đất đá văng ra khắp nơi, tạo thành núi, đảo và những vùng đất khác nhau. Qua đó, câu chuyện đã giúp người đọc hình dung về quá trình hình thành trời đất theo cách giải thích của người xưa.</p>
+
+    <p>Điểm nổi bật nhất của truyện là chủ đề giải thích nguồn gốc hình thành thế giới tự nhiên. Khi chưa có những kiến thức khoa học như ngày nay, con người thường dùng trí tưởng tượng để giải thích những điều bí ẩn trong cuộc sống. Hình ảnh vị thần khổng lồ dựng cột chống trời thể hiện mong muốn tìm hiểu về vũ trụ của người Việt cổ. Đồng thời, truyện còn cho thấy sự ngưỡng mộ của con người trước sức mạnh to lớn của thiên nhiên.</p>
+
+    <p>Bên cạnh nội dung ý nghĩa, truyện còn có những nét đặc sắc về nghệ thuật. Trước hết là nghệ thuật xây dựng nhân vật thần thoại. Thần Trụ Trời được miêu tả với thân hình to lớn và sức mạnh phi thường, có thể thực hiện những công việc vượt xa khả năng của con người bình thường. Ngoài ra, truyện còn sử dụng nhiều chi tiết tưởng tượng, kì ảo như việc thần dựng cột chống trời hay phá cột để tạo ra núi non. Những chi tiết này làm cho câu chuyện trở nên hấp dẫn và mang đậm màu sắc thần thoại. Cách kể chuyện khá ngắn gọn, các sự việc diễn ra theo trình tự rõ ràng nên người đọc dễ dàng theo dõi và hiểu được nội dung.</p>
+
+    <p>Theo em, “Thần Trụ Trời” là một câu chuyện thú vị vì nó cho thấy người xưa đã cố gắng tìm hiểu thế giới bằng trí tưởng tượng của mình. Dù cách giải thích về sự hình thành trời đất không giống với khoa học hiện nay, truyện vẫn có giá trị riêng về mặt văn hóa và tinh thần. Tác phẩm giúp chúng ta hiểu thêm về suy nghĩ, niềm tin cũng như khả năng sáng tạo của người Việt cổ.</p>
+
+    <p>Tóm lại, truyện “Thần Trụ Trời” là một tác phẩm thần thoại có ý nghĩa, vừa giải thích nguồn gốc trời đất theo quan niệm dân gian, vừa thể hiện trí tưởng tượng phong phú của con người thời xưa. Qua câu chuyện, em càng thêm yêu thích và trân trọng những giá trị mà văn học dân gian Việt Nam để lại.</p>
   </section>
 
 </div>
