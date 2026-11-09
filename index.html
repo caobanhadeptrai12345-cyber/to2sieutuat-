@@ -4,249 +4,276 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Thần Trụ Trời</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Noto+Sans:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --navy: #0b1b33;
-    --navy-2: #16305a;
+    --card: #16305a;
     --gold: #d4af37;
     --gold-light: #f5dc8a;
     --cream: #f4ecd8;
     --brown: #3e2612;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
+  html, body { height: 100%; }
   body {
-    min-height: 100vh;
-    font-family: "Georgia", "Times New Roman", serif;
-    background: radial-gradient(ellipse at center, var(--navy-2) 0%, var(--navy) 70%);
-    color: var(--cream);
-    overflow-x: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* Canvas hạt bụi vàng */
-  #dust {
-    position: fixed; inset: 0;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* Mây trôi */
-  .cloud {
-    position: fixed;
-    width: 260px; height: 90px;
-    background:
-      radial-gradient(circle at 30% 60%, rgba(212,175,55,.18) 0 35%, transparent 36%),
-      radial-gradient(circle at 55% 45%, rgba(212,175,55,.22) 0 30%, transparent 31%),
-      radial-gradient(circle at 75% 60%, rgba(212,175,55,.15) 0 28%, transparent 29%);
-    filter: blur(2px);
-    opacity: .6;
-    animation: drift linear infinite;
-    z-index: 0;
-    pointer-events: none;
-  }
-  .cloud:nth-child(2) { top: 12%; animation-duration: 60s; animation-delay: -10s; transform: scale(1.4); }
-  .cloud:nth-child(3) { top: 65%; animation-duration: 80s; animation-delay: -35s; transform: scale(1.8); }
-  .cloud:nth-child(4) { top: 35%; animation-duration: 70s; animation-delay: -5s;  transform: scale(1.1); }
-
-  @keyframes drift {
-    from { left: -300px; }
-    to   { left: 110vw; }
-  }
-
-  /* Cuộn giấy cổ */
-  .scroll {
-    position: relative;
-    z-index: 1;
-    width: min(680px, 92vw);
-    padding: 70px 56px;
-    background:
-      radial-gradient(ellipse at 30% 20%, #f7ebc8 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 90%, #d9bb84 0%, transparent 55%),
-      linear-gradient(180deg, #efdcab, #d9bd86);
-    color: var(--brown);
-    border-radius: 6px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.6), inset 0 0 80px rgba(120,70,20,.35);
-    clip-path: inset(0 0 100% 0);
-    animation: unroll 2.2s cubic-bezier(.6,.05,.2,1) .3s forwards;
-    text-align: center;
-  }
-  .scroll::before, .scroll::after {
-    content: "";
-    position: absolute; left: -14px; right: -14px;
-    height: 26px;
-    background: linear-gradient(90deg, #8a5a22, #f3dfa6 20%, #c59a52 50%, #f3dfa6 80%, #8a5a22);
-    border-radius: 14px;
-    box-shadow: 0 4px 10px rgba(0,0,0,.4);
-  }
-  .scroll::before { top: -13px; }
-  .scroll::after  { bottom: -13px; }
-
-  @keyframes unroll {
-    to { clip-path: inset(0 0 0 0); }
-  }
-
-  .label {
-    font-size: 13px;
-    letter-spacing: 6px;
-    color: #8a5a22;
-    text-transform: uppercase;
-    opacity: 0;
-    animation: fade .8s ease 2.2s forwards;
-  }
-
-  h1 {
-    margin: 14px 0 18px;
-    font-size: clamp(40px, 7vw, 64px);
-    font-weight: 700;
-    background: linear-gradient(90deg, #8a5a22, var(--gold), var(--gold-light), var(--gold), #8a5a22);
-    background-size: 300% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: shimmer 6s linear infinite;
-    text-shadow: 0 0 20px rgba(212,175,55,.25);
-  }
-  @keyframes shimmer { to { background-position: 300% 0; } }
-
-  .text {
-    min-height: 120px;
-    font-size: 18px;
-    line-height: 1.8;
-    font-style: italic;
-  }
-  .caret::after {
-    content: "|";
-    margin-left: 2px;
-    animation: blink 1s steps(1) infinite;
-  }
-  @keyframes blink { 50% { opacity: 0; } }
-
-  .btn {
-    margin-top: 26px;
-    padding: 12px 34px;
-    font: inherit;
-    font-size: 16px;
-    color: var(--gold-light);
     background: var(--navy);
+    color: var(--cream);
+    font-family: "Noto Sans", Arial, sans-serif;
+    overflow: hidden;
+  }
+
+  /* Khung slide: tỉ lệ 16:9, tự co theo màn hình */
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    padding: 6vh 8vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .6s ease, visibility .6s;
+    background-size: cover;
+    background-position: center;
+  }
+  .slide.active { opacity: 1; visibility: visible; }
+
+  h1, h2 {
+    font-family: "Noto Serif", Georgia, serif;
+    color: var(--gold);
+    font-size: clamp(28px, 4.2vw, 46px);
+    margin-bottom: 3vh;
+  }
+  p, li {
+    font-size: clamp(15px, 1.8vw, 20px);
+    line-height: 1.65;
+  }
+  ul { list-style: none; }
+
+  /* Slide 1 */
+  .s1 { flex-direction: row; align-items: center; gap: 4vw; }
+  .s1 .text { flex: 1; }
+  .s1 .art {
+    flex: 1; height: 70vh;
+    background: url("troi.png") center/cover no-repeat, #16305a;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.5);
+  }
+  .tag {
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5vh;
+  }
+
+  /* Slide 2 - timeline */
+  .steps { display: grid; gap: 2.2vh; }
+  .step { display: flex; align-items: center; gap: 18px; }
+  .num {
+    flex: 0 0 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--navy);
+    font-family: "Noto Serif", serif;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Slide 3 - nền vàng đen */
+  .s3 { background-image: url("vang.png"), linear-gradient(#0b1b33,#0b1b33); }
+  .panel {
+    background: rgba(11,27,51,.88);
+    padding: 5vh 4vw;
+    border-radius: 8px;
+    max-width: 60vw;
+  }
+
+  /* Slide 4 - 2x2 cards */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5vh 2.5vw; }
+  .card { background: var(--card); padding: 3vh 2.5vw; border-radius: 8px; }
+  .card .k {
+    font-family: "Noto Serif", serif;
+    color: var(--gold);
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 1vh;
+  }
+  .card h3 {
+    font-family: "Noto Serif", serif;
+    color: var(--cream);
+    font-size: clamp(18px, 2vw, 24px);
+    margin-bottom: 1vh;
+  }
+
+  /* Slide 5 - 2 cột */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3vw; }
+  .col { background: var(--card); padding: 4vh 2.5vw; border-radius: 8px; }
+  .col h3 {
+    font-family: "Noto Serif", serif;
+    color: var(--gold);
+    font-size: clamp(20px, 2.4vw, 28px);
+    margin-bottom: 2vh;
+  }
+  .col li { margin-bottom: 1.2vh; padding-left: 1.2em; position: relative; }
+  .col li::before { content: "•"; color: var(--gold); position: absolute; left: 0; }
+
+  /* Slide 6 - nền giấy cổ */
+  .s6 { background-image: url("giay.png"), linear-gradient(#efdcab,#d9bd86); }
+  .s6 .scroll-text {
+    color: var(--brown);
+    max-width: 60vw;
+    margin-left: 10vw;
+  }
+  .s6 h2 { color: var(--brown); margin-left: 10vw; }
+  .msg {
+    margin: 4vh 0 0 10vw;
+    max-width: 52vw;
+    background: var(--navy);
+    color: var(--cream);
+    padding: 2.5vh 2.5vw;
+    border-radius: 6px;
+  }
+  .msg b { color: var(--gold); }
+
+  /* Điều khiển */
+  .controls {
+    position: fixed;
+    bottom: 3vh; left: 50%;
+    transform: translateX(-50%);
+    display: flex; align-items: center; gap: 14px;
+    z-index: 10;
+  }
+  .controls button {
+    background: rgba(11,27,51,.85);
+    color: var(--gold-light);
     border: 1px solid var(--gold);
+    padding: 8px 18px;
     border-radius: 4px;
     cursor: pointer;
-    opacity: 0;
-    animation: fade .8s ease forwards;
-    transition: transform .25s, box-shadow .25s;
+    font: inherit;
   }
-  .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 22px rgba(212,175,55,.55);
-  }
-
-  .hidden { display: none; }
-
-  @keyframes fade { to { opacity: 1; } }
-
-  /* Hiệu ứng vệt sáng theo chuột */
-  #glow {
-    position: fixed;
-    width: 320px; height: 320px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(212,175,55,.18), transparent 70%);
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    z-index: 0;
-    transition: left .15s ease-out, top .15s ease-out;
-  }
+  .controls button:hover { box-shadow: 0 0 14px rgba(212,175,55,.5); }
+  .counter { color: var(--cream); font-size: 14px; min-width: 50px; text-align: center; }
 </style>
 </head>
 <body>
 
-<canvas id="dust"></canvas>
-<div id="glow"></div>
-<div class="cloud"></div>
-<div class="cloud"></div>
-<div class="cloud"></div>
-<div class="cloud"></div>
+<div class="deck">
 
-<main class="scroll">
-  <p class="label">Thần thoại Việt Nam</p>
-  <h1>Thần Trụ Trời</h1>
-  <p class="text caret" id="typed"></p>
-  <button class="btn" id="btn">Khám phá câu chuyện</button>
-</main>
+  <!-- Slide 1 -->
+  <section class="slide s1 active">
+    <div class="text">
+      <p class="tag">Thần thoại Việt Nam</p>
+      <h1>Giới thiệu tác phẩm</h1>
+      <ul>
+        <li>• <b>Tác phẩm:</b> Thần Trụ Trời.</li>
+        <li>• <b>Thể loại:</b> Thần thoại Việt Nam.</li>
+        <li>• <b>Tác giả:</b> Truyện dân gian, không rõ tác giả.</li>
+        <li>• <b>Nội dung chính:</b> Giải thích nguồn gốc trời đất và sự hình thành thế giới theo trí tưởng tượng của người xưa.</li>
+      </ul>
+    </div>
+    <div class="art"></div>
+  </section>
+
+  <!-- Slide 2 -->
+  <section class="slide">
+    <h2>Tóm tắt nội dung truyện</h2>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><p>Thuở ban đầu, trời đất còn hỗn độn, chưa phân chia.</p></div>
+      <div class="step"><div class="num">2</div><p>Một vị thần khổng lồ xuất hiện.</p></div>
+      <div class="step"><div class="num">3</div><p>Thần đào đất, đá rồi dựng cột chống trời.</p></div>
+      <div class="step"><div class="num">4</div><p>Trời và đất dần được phân chia.</p></div>
+      <div class="step"><div class="num">5</div><p>Thần phá cột, đất đá văng ra tạo thành núi, đảo và các địa hình khác.</p></div>
+    </div>
+  </section>
+
+  <!-- Slide 3 -->
+  <section class="slide s3">
+    <div class="panel">
+      <h2>Phân tích chủ đề</h2>
+      <p><b style="color:var(--gold)">Chủ đề:</b> Giải thích nguồn gốc hình thành trời đất và thế giới tự nhiên.</p>
+      <ul style="margin-top:3vh">
+        <li>• Thể hiện cách người xưa lý giải sự hình thành vũ trụ.</li>
+        <li>• Ca ngợi sức mạnh phi thường của các vị thần.</li>
+        <li>• Cho thấy trí tưởng tượng phong phú và khát vọng khám phá thiên nhiên của con người.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Slide 4 -->
+  <section class="slide">
+    <h2>Đặc sắc nghệ thuật</h2>
+    <div class="cards">
+      <div class="card"><div class="k">01</div><h3>Nhân vật</h3><p>Thần có vóc dáng khổng lồ, sức mạnh phi thường.</p></div>
+      <div class="card"><div class="k">02</div><h3>Chi tiết kỳ ảo</h3><p>Dựng cột chống trời, phá cột tạo núi non.</p></div>
+      <div class="card"><div class="k">03</div><h3>Không gian</h3><p>Rộng lớn, mang tầm vóc vũ trụ.</p></div>
+      <div class="card"><div class="k">04</div><h3>Cách kể</h3><p>Ngắn gọn, dễ hiểu, diễn biến rõ ràng.</p></div>
+    </div>
+  </section>
+
+  <!-- Slide 5 -->
+  <section class="slide">
+    <h2>Đánh giá tác phẩm</h2>
+    <div class="cols">
+      <div class="col">
+        <h3>Giá trị nội dung</h3>
+        <ul>
+          <li>Giúp người đọc hiểu cách người Việt cổ tưởng tượng về nguồn gốc thế giới.</li>
+          <li>Thể hiện khát vọng khám phá và chinh phục tự nhiên.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <h3>Giá trị nghệ thuật</h3>
+        <ul>
+          <li>Hình tượng thần độc đáo.</li>
+          <li>Trí tưởng tượng phong phú.</li>
+          <li>Các chi tiết thần thoại hấp dẫn.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 6 -->
+  <section class="slide s6">
+    <h2>Cảm nhận và kết luận</h2>
+    <p class="scroll-text">Qua truyện “Thần Trụ Trời”, em cảm nhận được trí tưởng tượng phong phú và sự sáng tạo của người xưa. Dù cách giải thích về nguồn gốc trời đất còn mang tính thần thoại, câu chuyện vẫn có giá trị văn hóa và giúp chúng ta hiểu thêm về đời sống tinh thần của người Việt cổ.</p>
+    <p class="msg"><b>Thông điệp:</b> Trí tưởng tượng và khát vọng khám phá thế giới luôn là một phần quan trọng trong đời sống con người.</p>
+  </section>
+
+</div>
+
+<div class="controls">
+  <button id="prev">← Trước</button>
+  <span class="counter" id="counter"></span>
+  <button id="next">Sau →</button>
+</div>
 
 <script>
-  // ===== Hạt bụi vàng bay lơ lửng =====
-  const canvas = document.getElementById('dust');
-  const ctx = canvas.getContext('2d');
-  let particles = [];
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  let current = 0;
 
-  function resize() {
-    canvas.width = innerWidth;
-    canvas.height = innerHeight;
-    particles = Array.from({ length: 90 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 2 + 0.5,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: -Math.random() * 0.4 - 0.1,
-      a: Math.random()
-    }));
+  function show(n) {
+    current = Math.max(0, Math.min(n, slides.length - 1));
+    slides.forEach((s, i) => s.classList.toggle('active', i === current));
+    counter.textContent = (current + 1) + ' / ' + slides.length;
   }
-  resize();
-  addEventListener('resize', resize);
 
-  function drawDust() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (const p of particles) {
-      p.x += p.vx; p.y += p.vy; p.a += 0.01;
-      if (p.y < -5) { p.y = canvas.height + 5; p.x = Math.random() * canvas.width; }
-      const alpha = (Math.sin(p.a) + 1) / 2 * 0.8;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(245, 220, 138, ${alpha})`;
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = '#d4af37';
-      ctx.fill();
-    }
-    requestAnimationFrame(drawDust);
-  }
-  drawDust();
-
-  // ===== Vệt sáng theo chuột =====
-  const glow = document.getElementById('glow');
-  addEventListener('mousemove', e => {
-    glow.style.left = e.clientX + 'px';
-    glow.style.top = e.clientY + 'px';
+  document.getElementById('next').onclick = () => show(current + 1);
+  document.getElementById('prev').onclick = () => show(current - 1);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') show(current + 1);
+    if (e.key === 'ArrowLeft') show(current - 1);
   });
 
-  // ===== Gõ chữ từng ký tự =====
-  const text = 'Ngày xưa, trời đất còn hỗn độn, chưa phân chia. Một vị thần khổng lồ đã đội trời, dựng cột đá chống đỡ bầu trời, để đất và trời có chỗ đứng riêng của mình...';
-  const typed = document.getElementById('typed');
-  const btn = document.getElementById('btn');
-  let i = 0;
-
-  function type() {
-    if (i <= text.length) {
-      typed.textContent = text.slice(0, i++);
-      setTimeout(type, 45);
-    } else {
-      typed.classList.remove('caret');
-    }
-  }
-  setTimeout(type, 2600);
-
-  // ===== Nút bấm: hiện thêm nội dung =====
-  btn.addEventListener('click', () => {
-    btn.textContent = 'Thần đã phá cột, núi non hình thành!';
-    btn.style.color = '#fff';
-    document.body.animate(
-      [{ filter: 'brightness(1)' }, { filter: 'brightness(1.6)' }, { filter: 'brightness(1)' }],
-      { duration: 900 }
-    );
-  });
+  show(0);
 </script>
 </body>
 </html>
